@@ -57,6 +57,29 @@ const maxCount = computed(() => {
         </div>
       </section>
 
+      <h2 class="section-title">未平隔离 · 按原因码</h2>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr><th>原因码</th><th>名称</th><th>策略</th><th>未平</th><th>未平金额（元）</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="b in data.原因分桶" :key="b.reason_code">
+              <td class="mono">{{ b.reason_code }}</td>
+              <td>{{ b.label }}</td>
+              <td>
+                <span
+                  class="tag"
+                  :class="b.policy === '自动可再配' ? 'on' : (b.policy === '永久拒绝' ? 'bad' : 'warn')"
+                >{{ b.policy }}</span>
+              </td>
+              <td>{{ b.open_count }}</td>
+              <td>{{ yuan(b.open_amount_cents) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <h2 class="section-title">账户余额</h2>
       <div class="panel">
         <table>

@@ -39,13 +39,14 @@ def test_settle_and_verify(client):
     assert run.status_code == 200, run.text
     body = run.json()
     assert body["status"] == "完成"
-    assert body["quarantine_count"] >= 1
 
     q = client.get("/api/quarantine").json()
-    assert any(x["reason"] == "冲正无原单" for x in q)
+    assert any(x["reason_code"] == "NO_ORIGINAL" for x in q)
+    assert any(x["status"] == "未平" for x in q)
 
     report = client.post("/api/verify-reports")
     assert report.status_code == 200, report.text
     rj = report.json()
     assert rj["consistent"] == 1
     assert rj["ledger_net_cents"] == rj["balance_sum_cents"]
+    assert sum(b["open_count"] for b in rj["原因分桶"]) >= 1

@@ -403,6 +403,39 @@ tbody tr:hover { background: rgba(36, 87, 197, 0.04); }
 .msg { color: var(--danger); margin: 8px 0; }
 .ok { color: var(--ok); margin: 8px 0; }
 .row-actions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
+.hint-text {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+.desc { color: var(--muted); font-size: 12.5px; max-width: 26em; line-height: 1.5; }
+.inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+}
+.inline-field input,
+.note-input,
+.policy-edit select {
+  font: inherit;
+  font-size: 12.5px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  background: #fbfdff;
+  border-radius: 2px;
+  color: var(--ink);
+}
+.note-input { width: 130px; }
+.policy-edit { display: flex; gap: 6px; align-items: center; }
+.btn-sm { padding: 6px 10px; font-size: 12px; }
 .note-strip {
   margin: 0 0 18px;
   padding: 12px 0 12px 12px;

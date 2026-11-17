@@ -25,7 +25,10 @@ async function runSettle() {
   msg.value = ''
   try {
     const r = await postJson('/api/settle-runs')
-    msg.value = `归并完成 #${r.id}：净额 ${(r.net_cents / 100).toFixed(2)}，隔离 ${r.quarantine_count}`
+    msg.value =
+      `归并完成 #${r.id}：净额 ${(r.net_cents / 100).toFixed(2)}，` +
+      `新增隔离 ${r['本次新增隔离']}，再配 ${r['本次再配']}，` +
+      `永久拒绝拦下 ${r['永久拒绝拦下']}，待确认拦下 ${r['待确认拦下']}`
     await load()
   } catch (e) {
     err.value = String(e.message || e)
@@ -42,8 +45,11 @@ function yuan(cents) {
 <template>
   <div>
     <h1>归并台</h1>
-    <p class="lead">对「待归并」正向与冲正跑一轮净额归并：配平落余额，无原单/超额进隔离。</p>
-    <p class="note-strip">本轮只处理状态为「待归并」的流水；隔离项不计入账户余额。</p>
+    <p class="lead">对「待归并」正向与冲正跑一轮净额归并：配平落余额，未平项按原因码落隔离。</p>
+    <p class="note-strip">
+      本轮处理「待归并」流水，并按原因码策略复扫「未平」隔离：自动可再配直接进入配平；
+      需确认项无确认标记不配平；永久拒绝项永不改余额。策略执行与配平同一失败闭。
+    </p>
     <div class="row-actions">
       <button class="btn" :disabled="busy" @click="runSettle">跑净额归并</button>
     </div>

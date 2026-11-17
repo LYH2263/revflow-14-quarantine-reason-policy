@@ -6,9 +6,11 @@ const rows = ref([])
 const err = ref('')
 const msg = ref('')
 const busy = ref(false)
+const buckets = ref([])
 
 async function load() {
   rows.value = await getJson('/api/verify-reports')
+  buckets.value = rows.value.length ? rows.value[0]['原因分桶'] || [] : []
 }
 
 onMounted(async () => {
@@ -73,6 +75,34 @@ function yuan(cents) {
             <td>{{ r.created_at }}</td>
           </tr>
           <tr v-if="!rows.length"><td colspan="7">尚无报告</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" v-if="buckets.length">
+      <h2>最近报告 · 按原因码分桶</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>原因码</th><th>名称</th><th>策略</th><th>未平</th>
+            <th>未平金额（元）</th><th>本轮新增</th><th>本轮再配</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="b in buckets" :key="b.reason_code">
+            <td class="mono">{{ b.reason_code }}</td>
+            <td>{{ b.label }}</td>
+            <td>
+              <span
+                class="tag"
+                :class="b.policy === '自动可再配' ? 'on' : (b.policy === '永久拒绝' ? 'bad' : 'warn')"
+              >{{ b.policy }}</span>
+            </td>
+            <td>{{ b.open_count }}</td>
+            <td>{{ yuan(b.open_amount_cents) }}</td>
+            <td>{{ b.new_count }}</td>
+            <td>{{ b.resolved_this_run }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
